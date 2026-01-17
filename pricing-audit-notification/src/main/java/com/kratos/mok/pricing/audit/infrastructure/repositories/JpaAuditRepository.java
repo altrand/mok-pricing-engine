@@ -1,4 +1,4 @@
-package com.kratos.mok.pricing.audit.infrastructure.repository;
+package com.kratos.mok.pricing.audit.infrastructure.repositories;
 
 import com.kratos.mok.pricing.audit.infrastructure.entity.AuditLogEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,21 +1,49 @@
 package com.kratos.mok.pricing.fees.domain.strategy;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.kratos.mok.pricing.fees.domain.enums.FeeStrategyType;
 import com.kratos.mok.pricing.shared.domain.vo.Money;
 
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
-        property = "type"
-)
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = FixedFee.class, name = "FIXED"),
-        @JsonSubTypes.Type(value = ProportionalFee.class, name = "PROPORTIONAL"),
-        @JsonSubTypes.Type(value = TieredFee.class, name = "TIERED")
-})
-public sealed interface FeeStrategy permits FixedFee, ProportionalFee, TieredFee {
-    Money apply(Money transactionAmount);
-    FeeStrategyType type();
-}
+import java.math.BigDecimal;
+import java.util.Objects;
 
+public final class FeeStrategy {
+
+    private final FeeStrategyType type;
+
+    private final Money fixedFee;          // uniquement si FIXED
+    private final BigDecimal percentage;   // uniquement si PERCENTAGE
+
+    private FeeStrategy(FeeStrategyType type, Money fixedFee, BigDecimal percentage) {
+        this.type = Objects.requireNonNull(type);
+        this.fixedFee = fixedFee;
+        this.percentage = percentage;
+    }
+
+    public static FeeStrategy fixed(Money fee) {
+        Objects.requireNonNull(fee);
+        if (fee.isNegative()) throw new IllegalArgumentException("Fixed fee cannot be negative");
+        return new FeeStrategy(FeeStrategyType.FIXED, fee, null);
+    }
+
+    public static FeeStrategy percentage(BigDecimal percentage) {
+        Objects.requireNonNull(percentage);
+        if (percentage.signum() < 0) throw new IllegalArgumentException("Percentage cannot be negative");
+        return new FeeStrategy(FeeStrategyType.PERCENTAGE, null, percentage);
+    }
+
+    public static FeeStrategy tiered() {
+        return new FeeStrategy(FeeStrategyType.TIERED, null, null);
+    }
+
+    public FeeStrategyType type() { return type; }
+
+    public Money fixedFee() {
+        if (type != FeeStrategyType.FIXED) throw new IllegalStateException("Not FIXED");
+        return fixedFee;
+    }
+
+    public BigDecimal percentage() {
+        if (type != FeeStrategyType.PERCENTAGE) throw new IllegalStateException("Not PERCENTAGE");
+        return percentage;
+    }
+}

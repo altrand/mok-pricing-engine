@@ -1,4 +1,4 @@
-package com.kratos.mok.pricing.audit.infrastructure.repository;
+package com.kratos.mok.pricing.audit.infrastructure.repositories;
 
 import com.kratos.mok.pricing.audit.domain.AuditLog;
 import com.kratos.mok.pricing.audit.domain.repository.AuditRepository;

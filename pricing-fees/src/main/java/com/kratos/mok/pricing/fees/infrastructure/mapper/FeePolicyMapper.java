@@ -3,8 +3,8 @@ package com.kratos.mok.pricing.fees.infrastructure.mapper;
 import com.kratos.mok.pricing.fees.domain.FeeLimits;
 import com.kratos.mok.pricing.fees.domain.FeePolicy;
 import com.kratos.mok.pricing.fees.domain.FeeTarget;
-import com.kratos.mok.pricing.fees.domain.ValidityPeriod;
-import com.kratos.mok.pricing.fees.domain.enums.PolicyStatus;
+import com.kratos.mok.pricing.fees.domain.vo.ValidityWindow;
+import com.kratos.mok.pricing.fees.domain.enums.FeePolicyStatus;
 import com.kratos.mok.pricing.fees.domain.enums.TransactionType;
 import com.kratos.mok.pricing.fees.domain.snapshot.FeePolicySnapshot;
 import com.kratos.mok.pricing.fees.domain.vo.FeePolicyId;
@@ -76,7 +76,7 @@ public class FeePolicyMapper {
                 ? new Money(entity.getActivationThreshold())
                 : Money.ZERO;
 
-        ValidityPeriod validity = new ValidityPeriod(
+        ValidityWindow validity = new ValidityWindow(
                 entity.getValidityStart(),
                 entity.getValidityEnd()
         );
@@ -106,7 +106,7 @@ public class FeePolicyMapper {
                 activationThreshold,
                 validity,
                 entity.isKycRequired(),
-                PolicyStatus.valueOf(entity.getStatus()),
+                FeePolicyStatus.valueOf(entity.getStatus()),
                 createdBy,
                 validatedBy
         );

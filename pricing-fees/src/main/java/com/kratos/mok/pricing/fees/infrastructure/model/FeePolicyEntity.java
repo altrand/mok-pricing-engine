@@ -1,7 +1,6 @@
 package com.kratos.mok.pricing.fees.infrastructure.model;
 
 import com.kratos.mok.pricing.fees.domain.enums.TransactionType;
-import com.kratos.mok.pricing.fees.domain.strategy.FeeStrategy;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

@@ -3,9 +3,9 @@ package com.kratos.mok.pricing.app.fees.tests.unit;
 import com.kratos.mok.pricing.fees.domain.*;
 import com.kratos.mok.pricing.fees.domain.enums.TransactionType;
 import com.kratos.mok.pricing.fees.domain.snapshot.FeePolicySnapshot;
-import com.kratos.mok.pricing.fees.domain.strategy.FeeStrategy;
 import com.kratos.mok.pricing.fees.domain.strategy.FixedFee;
 import com.kratos.mok.pricing.fees.domain.strategy.ProportionalFee;
+import com.kratos.mok.pricing.fees.domain.vo.ValidityWindow;
 import com.kratos.mok.pricing.shared.domain.vo.Money;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -38,7 +38,7 @@ class FeePolicyTest {
                     strategy,
                     FeeLimits.NONE,
                     Money.ZERO,
-                    ValidityPeriod.PERMANENT,
+                    ValidityWindow.PERMANENT,
                     false,
                     "admin-1"
             );
@@ -60,7 +60,7 @@ class FeePolicyTest {
             // GIVEN
             var policy = FeePolicy.create(
                     TransactionType.WITHDRAWAL, FeeTarget.global(), new FixedFee(Money.of(100)),
-                    FeeLimits.NONE, Money.ZERO, ValidityPeriod.PERMANENT, false, "admin-1"
+                    FeeLimits.NONE, Money.ZERO, ValidityWindow.PERMANENT, false, "admin-1"
             );
 
             // WHEN
@@ -93,7 +93,7 @@ class FeePolicyTest {
             // GIVEN : Policy PENDING
             var policy = FeePolicy.create(
                     TransactionType.WITHDRAWAL, FeeTarget.global(), new FixedFee(Money.of(100)),
-                    FeeLimits.NONE, Money.ZERO, ValidityPeriod.PERMANENT, false, "admin-1"
+                    FeeLimits.NONE, Money.ZERO, ValidityWindow.PERMANENT, false, "admin-1"
             );
 
             // WHEN / THEN
@@ -148,7 +148,7 @@ class FeePolicyTest {
 
             var policy = FeePolicy.create(
                     TransactionType.WITHDRAWAL, FeeTarget.global(), new FixedFee(Money.of(500)),
-                    FeeLimits.NONE, activationThreshold, ValidityPeriod.PERMANENT, false, "admin"
+                    FeeLimits.NONE, activationThreshold, ValidityWindow.PERMANENT, false, "admin"
             );
             policy.activate("super-admin");
 
@@ -173,7 +173,7 @@ class FeePolicyTest {
 
             var policy = FeePolicy.create(
                     TransactionType.WITHDRAWAL, FeeTarget.global(), strategy,
-                    limits, Money.ZERO, ValidityPeriod.PERMANENT, false, "admin"
+                    limits, Money.ZERO, ValidityWindow.PERMANENT, false, "admin"
             );
             policy.activate("super-admin");
 
@@ -200,7 +200,7 @@ class FeePolicyTest {
         @Test
         void shouldCanEnforceValidityPeriod() {
             // GIVEN : Valide uniquement en 2024
-            var validity2024 = new ValidityPeriod(
+            var validity2024 = new ValidityWindow(
                     LocalDateTime.of(2024, 1, 1, 0, 0),
                     LocalDateTime.of(2024, 12, 31, 23, 59)
             );
@@ -227,7 +227,7 @@ class FeePolicyTest {
             // GIVEN : KYC Requis = true
             var policy = FeePolicy.create(
                     TransactionType.WITHDRAWAL, FeeTarget.global(), new FixedFee(Money.of(100)),
-                    FeeLimits.NONE, Money.ZERO, ValidityPeriod.PERMANENT, true, "admin"
+                    FeeLimits.NONE, Money.ZERO, ValidityWindow.PERMANENT, true, "admin"
             );
             policy.activate("super-admin");
 
@@ -252,9 +252,9 @@ class FeePolicyTest {
         @Test
         void shouldCanCorrectlyExposePriority() {
             // GIVEN: 3 règles avec cibles différentes
-            var global = FeePolicy.create(TransactionType.WITHDRAWAL, FeeTarget.global(), new FixedFee(Money.ZERO), FeeLimits.NONE, Money.ZERO, ValidityPeriod.PERMANENT, false, "admin");
-            var profile = FeePolicy.create(TransactionType.WITHDRAWAL, FeeTarget.profile("VIP"), new FixedFee(Money.ZERO), FeeLimits.NONE, Money.ZERO, ValidityPeriod.PERMANENT, false, "admin");
-            var individual = FeePolicy.create(TransactionType.WITHDRAWAL, FeeTarget.individual("User1"), new FixedFee(Money.ZERO), FeeLimits.NONE, Money.ZERO, ValidityPeriod.PERMANENT, false, "admin");
+            var global = FeePolicy.create(TransactionType.WITHDRAWAL, FeeTarget.global(), new FixedFee(Money.ZERO), FeeLimits.NONE, Money.ZERO, ValidityWindow.PERMANENT, false, "admin");
+            var profile = FeePolicy.create(TransactionType.WITHDRAWAL, FeeTarget.profile("VIP"), new FixedFee(Money.ZERO), FeeLimits.NONE, Money.ZERO, ValidityWindow.PERMANENT, false, "admin");
+            var individual = FeePolicy.create(TransactionType.WITHDRAWAL, FeeTarget.individual("User1"), new FixedFee(Money.ZERO), FeeLimits.NONE, Money.ZERO, ValidityWindow.PERMANENT, false, "admin");
 
             // THEN: On vérifie que la logique interne attribue les bonnes priorités
 
@@ -277,7 +277,7 @@ class FeePolicyTest {
                 strategy,
                 FeeLimits.NONE,
                 Money.ZERO,
-                ValidityPeriod.PERMANENT,
+                ValidityWindow.PERMANENT,
                 false,
                 "admin-test"
         );

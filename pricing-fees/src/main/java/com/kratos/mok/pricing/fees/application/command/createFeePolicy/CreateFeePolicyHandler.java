@@ -33,27 +33,27 @@ public class CreateFeePolicyHandler {
         );
 
         // 2. Domaine : Vérification de chevauchement (Barrier 2)
-        /*if (repository.existsConflictingPolicy(policy)) {
+        if (repository.existsConflictingPolicy(policy)) {
             throw new IllegalArgumentException("Une politique active existe déjà pour ce périmètre.");
-        }*/
+        }
 
         // 3. Contrôle : Vérification BEAC (Barrier 3)
-        /*FeePolicyComplianceData complianceData = policy.toComplianceData();
+        FeePolicyComplianceData complianceData = policy.toComplianceData();
         try {
             regulatoryGatekeeper.validate(complianceData); // Appel Synchrone
         } catch (RegulatoryViolationException e) {
             // "Le process bifurque immédiatement vers Blocage automatique + Alerte"
             publishAudit(policy, "BLOCAGE_BEAC", command.authorId(), e.getMessage());
             throw e; // Arrêt du traitement (La transaction n'est pas sauvée)
-        }*/
+        }
 
         // 4. Persistance (Write Model)
         repository.save(policy);
 
         // 5. Audit
-        /*publishAudit(policy, "CREATION_SUCCES", command.authorId(), "Configuration validée");
+        publishAudit(policy, "CREATION_SUCCES", command.authorId(), "Configuration validée");
 
-        return policy.getId();*/
+        return policy.getId();
         return new CreateFeePolicyResponse("1", true);
     }
 
@@ -61,6 +61,6 @@ public class CreateFeePolicyHandler {
         // ... (Même logique d'event que précédemment) ...
     }
 
-       /* repository.save(policy);
-        return new CreateFeePolicyResponse(policy.snapshot().id(), true);*/
+        repository.save(policy);
+        return new CreateFeePolicyResponse(policy.snapshot().id(), true);
 }

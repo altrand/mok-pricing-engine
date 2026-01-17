@@ -2,6 +2,9 @@ spring:
   application:
     name: mok-pricing-engine
 
+  jpa:
+    open-in-view: false
+
   jackson:
     serialization:
       INDENT_OUTPUT: false
